@@ -1,0 +1,41 @@
+{
+    "errors": [
+        {
+            "op": { "op": "omit", "path": "/x/y", "value": "foo" },
+            "node": { "x": {} },
+            "message": "jsonPatch.noSuchPath"
+        }
+    ],
+    "ops": [
+        {
+            "op": { "op": "omit", "path": "/x/y", "value": {} },
+            "node": { "x": { "a": "b", "y": {} } },
+            "expected": { "x": { "a": "b" } }
+        },
+        {
+            "op": { "op": "omit", "path": "/0/2", "value": "c" },
+            "node": [ [ "a", "b", "c"], "d", "e" ],
+            "expected": [ [ "a", "b" ], "d", "e" ]
+        },
+        {
+            "op": { "op": "omit", "path": "/x/0", "value": "y" },
+            "node": { "x": [ "y", "z" ], "foo": "bar" },
+            "expected": { "x": [ "z" ], "foo": "bar" }
+        },
+        {
+            "op": { "op": "omit", "path": "/x/y", "value": "notSameValue" },
+            "node": { "x": { "a": "b", "y": {} } },
+            "expected": { "x": { "a": "b", "y": {} } }
+        },
+        {
+            "op": { "op": "omit", "path": "/0/2", "value": "notSameValue" },
+            "node": [ [ "a", "b", "c"], "d", "e" ],
+            "expected": [ [ "a", "b", "c" ], "d", "e" ]
+        },
+        {
+            "op": { "op": "omit", "path": "/x/0", "value": "notSameValue" },
+            "node": { "x": [ "y", "z" ], "foo": "bar" },
+            "expected": { "x": [ "y", "z" ], "foo": "bar" }
+        }
+    ]
+}

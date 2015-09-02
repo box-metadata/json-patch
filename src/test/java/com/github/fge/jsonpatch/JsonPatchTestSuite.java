@@ -28,22 +28,31 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.testng.Assert.*;
 
-public final class JsonPatchTestSuite
+@Test
+public abstract class JsonPatchTestSuite
 {
     private final JsonNode testNode;
+    private final JsonPatchFactory factory;
 
-    public JsonPatchTestSuite()
+    public JsonPatchTestSuite(String directory,
+            Map<String, Class<? extends JsonPatchOperation>> additionalOperations)
         throws IOException
     {
-        testNode = JsonLoader.fromResource("/jsonpatch/testsuite.json");
+        testNode = JsonLoader.fromResource("/jsonpatch/" + directory + "/testsuite.json");
+        JsonPatchFactoryBuilder factoryBuilder = new JsonPatchFactoryBuilder();
+        for (Map.Entry<String, Class<? extends JsonPatchOperation>> entry : additionalOperations.entrySet()) {
+            factoryBuilder.addOperation(entry.getKey(), entry.getValue());
+        }
+        factory = factoryBuilder.build();
     }
 
     @DataProvider
     public Iterator<Object[]> getTests()
-        throws IOException
+        throws IOException, JsonPatchException
     {
         final List<Object[]> list = Lists.newArrayList();
 
@@ -54,7 +63,7 @@ public final class JsonPatchTestSuite
         for (final JsonNode element: testNode) {
             if (!element.has("patch"))
                 continue;
-            patch = JsonPatch.fromJson(element.get("patch"));
+            patch = factory.fromJson(element.get("patch"));
             source = element.get("doc");
             expected = element.get("expected");
             if (expected == null)

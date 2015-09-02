@@ -31,17 +31,6 @@ import com.github.fge.msgsimple.load.MessageBundles;
 import static com.fasterxml.jackson.annotation.JsonSubTypes.*;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.*;
 
-@JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "op")
-
-@JsonSubTypes({
-    @Type(name = "add", value = AddOperation.class),
-    @Type(name = "copy", value = CopyOperation.class),
-    @Type(name = "move", value = MoveOperation.class),
-    @Type(name = "remove", value = RemoveOperation.class),
-    @Type(name = "replace", value = ReplaceOperation.class),
-    @Type(name = "test", value = TestOperation.class)
-})
-
 /**
  * Base abstract class for one patch operation
  *

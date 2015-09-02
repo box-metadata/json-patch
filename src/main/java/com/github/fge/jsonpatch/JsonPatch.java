@@ -87,7 +87,7 @@ import java.util.List;
  * <p>is parsed (as a {@code remove} operation, since it appears last).</p>
  *
  * <p><b>IMPORTANT NOTE:</b> the JSON Patch is supposed to be VALID when the
- * constructor for this class ({@link JsonPatch#fromJson(JsonNode)} is used.</p>
+ * factory for this class ({@link JsonPatchFactory#fromJson(JsonNode)} is used.</p>
  */
 public final class JsonPatch
     implements JsonSerializable
@@ -112,22 +112,6 @@ public final class JsonPatch
     public JsonPatch(final List<JsonPatchOperation> operations)
     {
         this.operations = ImmutableList.copyOf(operations);
-    }
-
-    /**
-     * Static factory method to build a JSON Patch out of a JSON representation
-     *
-     * @param node the JSON representation of the generated JSON Patch
-     * @return a JSON Patch
-     * @throws IOException input is not a valid JSON patch
-     * @throws NullPointerException input is null
-     */
-    public static JsonPatch fromJson(final JsonNode node)
-        throws IOException
-    {
-        BUNDLE.checkNotNull(node, "jsonPatch.nullInput");
-        return JacksonUtils.getReader().withType(JsonPatch.class)
-            .readValue(node);
     }
 
     /**
