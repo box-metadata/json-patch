@@ -19,11 +19,15 @@
 
 package com.github.fge.jsonpatch.serialization;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jackson.JsonNumEquals;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.JsonPatchFactory;
+import com.github.fge.jsonpatch.JsonPatchFactoryBuilder;
 import com.github.fge.jsonpatch.JsonPatchOperation;
 import com.google.common.base.Equivalence;
 import com.google.common.collect.Lists;
@@ -45,14 +49,19 @@ public abstract class JsonPatchOperationSerializationTest
     private final Class<? extends JsonPatchOperation> c;
     private final JsonNode node;
     private final ObjectMapper mapper;
+    private final JsonPatchFactory factory;
 
-    protected JsonPatchOperationSerializationTest(final String prefix,
+    protected JsonPatchOperationSerializationTest(final String operationName,
+        final String directoryName,
         final Class<? extends JsonPatchOperation> c)
         throws IOException
     {
-        final String resource = "/jsonpatch/" + prefix + ".json";
+        final String resource = "/jsonpatch/" + directoryName + "/" + operationName + ".json";
         node = JsonLoader.fromResource(resource);
         mapper = JacksonUtils.newMapper();
+        factory = (new JsonPatchFactoryBuilder())
+                .addOperation(operationName, c)
+                .build();
         this.c = c;
     }
 
@@ -72,14 +81,10 @@ public abstract class JsonPatchOperationSerializationTest
 
     @Test(dataProvider = "getInputs")
     public final void patchOperationSerializationWorks(final JsonNode input)
-        throws IOException
+        throws IOException, JsonPatchException, JsonProcessingException
     {
-        /*
-         * Deserialize a string input
-         */
-        final String in = input.toString();
         final JsonPatchOperation op
-            = mapper.readValue(in, JsonPatchOperation.class);
+            = factory.operationFromJson(input);
 
         /*
          * Check that the class of the operation is what is expected

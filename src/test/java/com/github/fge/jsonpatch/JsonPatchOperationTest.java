@@ -19,6 +19,7 @@
 
 package com.github.fge.jsonpatch;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.github.fge.jackson.JacksonUtils;
@@ -48,16 +49,20 @@ public abstract class JsonPatchOperationTest
 
     private final JsonNode errors;
     private final JsonNode ops;
-    private final ObjectReader reader;
+    private final JsonPatchFactory factory;
 
-    protected JsonPatchOperationTest(final String prefix)
+    protected JsonPatchOperationTest(final String operationName,
+            final String directoryName,
+            final Class<? extends JsonPatchOperation> op)
         throws IOException
     {
-        final String resource = "/jsonpatch/" + prefix + ".json";
+        final String resource = "/jsonpatch/" + directoryName + "/" + operationName + ".json";
         final JsonNode node = JsonLoader.fromResource(resource);
         errors = node.get("errors");
         ops = node.get("ops");
-        reader = JacksonUtils.getReader().withType(JsonPatchOperation.class);
+        factory = (new JsonPatchFactoryBuilder())
+                .addOperation(operationName, op)
+                .build();
     }
 
     @DataProvider
@@ -79,9 +84,9 @@ public abstract class JsonPatchOperationTest
     @Test(dataProvider = "getErrors")
     public final void errorsAreCorrectlyReported(final JsonNode patch,
         final JsonNode node, final String message)
-        throws IOException
+        throws IOException, JsonPatchException, JsonProcessingException
     {
-        final JsonPatchOperation op = reader.readValue(patch);
+        final JsonPatchOperation op = factory.operationFromJson(patch);
 
         try {
             op.apply(node);
@@ -109,9 +114,9 @@ public abstract class JsonPatchOperationTest
     @Test(dataProvider = "getOps")
     public final void operationsYieldExpectedResults(final JsonNode patch,
         final JsonNode node, final JsonNode expected)
-        throws IOException, JsonPatchException
+        throws IOException, JsonPatchException, JsonProcessingException
     {
-        final JsonPatchOperation op = reader.readValue(patch);
+        final JsonPatchOperation op = factory.operationFromJson(patch);
         final JsonNode actual = op.apply(node);
 
         assertTrue(EQUIVALENCE.equivalent(actual, expected),

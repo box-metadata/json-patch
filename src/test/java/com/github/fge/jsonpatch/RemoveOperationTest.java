@@ -29,12 +29,12 @@ import java.io.IOException;
 import static org.testng.Assert.*;
 
 public final class RemoveOperationTest
-    extends JsonPatchOperationTest
+    extends Rfc6902JsonPatchOperationTest
 {
     public RemoveOperationTest()
         throws IOException
     {
-        super("remove");
+        super("remove", RemoveOperation.class);
     }
 
     @Test

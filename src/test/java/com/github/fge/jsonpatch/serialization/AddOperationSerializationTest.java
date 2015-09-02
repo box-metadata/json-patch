@@ -24,7 +24,7 @@ import com.github.fge.jsonpatch.AddOperation;
 import java.io.IOException;
 
 public final class AddOperationSerializationTest
-    extends JsonPatchOperationSerializationTest
+    extends Rfc6902JsonPatchOperationSerializationTest
 {
     public AddOperationSerializationTest()
         throws IOException
