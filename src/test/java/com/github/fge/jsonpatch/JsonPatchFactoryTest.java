@@ -17,16 +17,15 @@ import static org.testng.Assert.*;
  *
  */
 public final class JsonPatchFactoryTest {
-    private final Map<String, Class<? extends JsonPatchOperation>> operations;
-    private final JsonPatchFactory factory;
+    private final RegistryBasedJsonPatchFactory factory;
 
     private static final MessageBundle BUNDLE
         = MessageBundles.getBundle(JsonPatchMessages.class);
 
     public JsonPatchFactoryTest() {
-        operations = new HashMap<String, Class<? extends JsonPatchOperation>>();
-        operations.put("add", AddOperation.class);
-        factory = new JsonPatchFactory(operations);
+        factory = new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder()
+                .addOperation("add", AddOperation.class)
+                .build();
     }
     @Test
     public void fromJsonParsesPatchCorrectly()
@@ -41,24 +40,6 @@ public final class JsonPatchFactoryTest {
         JsonNode node = JsonLoader.fromString("[{\"op\":\"remove\", \"path\": \"\"}]");
         try {
             JsonPatch patch = factory.fromJson(node);
-            fail("Should have thrown exception because op not recognized");
-        } catch (JsonPatchException e) {
-            assertEquals(BUNDLE.getMessage("jsonPatch.deserFailed"), e.getMessage());
-        }
-    }
-    @Test
-    public void operationFromJsonParsesOperationCorrectly()
-        throws IOException, JsonPatchException, JsonProcessingException {
-        JsonNode node = JsonLoader.fromString("{\"op\":\"add\", \"path\": \"\", \"value\": \"foo\"}");
-        JsonPatchOperation patchOp = factory.operationFromJson(node);
-        assertEquals(AddOperation.class, patchOp.getClass());
-    }
-    @Test
-    public void operationFromJsonThrowsIfOpNotRecognized()
-        throws IOException, JsonPatchException, JsonProcessingException {
-        JsonNode node = JsonLoader.fromString("{\"op\":\"remove\", \"path\": \"\"}");
-        try {
-            JsonPatchOperation patchOp = factory.operationFromJson(node);
             fail("Should have thrown exception because op not recognized");
         } catch (JsonPatchException e) {
             assertEquals(BUNDLE.getMessage("jsonPatch.deserFailed"), e.getMessage());

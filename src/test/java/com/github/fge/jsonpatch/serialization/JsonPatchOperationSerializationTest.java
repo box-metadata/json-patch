@@ -22,12 +22,13 @@ package com.github.fge.jsonpatch.serialization;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jackson.JsonNumEquals;
+import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.JsonPatchFactory;
-import com.github.fge.jsonpatch.JsonPatchFactoryBuilder;
+import com.github.fge.jsonpatch.RegistryBasedJsonPatchFactory;
 import com.github.fge.jsonpatch.JsonPatchOperation;
 import com.google.common.base.Equivalence;
 import com.google.common.collect.Lists;
@@ -49,7 +50,7 @@ public abstract class JsonPatchOperationSerializationTest
     private final Class<? extends JsonPatchOperation> c;
     private final JsonNode node;
     private final ObjectMapper mapper;
-    private final JsonPatchFactory factory;
+    private final RegistryBasedJsonPatchFactory factory;
 
     protected JsonPatchOperationSerializationTest(final String operationName,
         final String directoryName,
@@ -59,7 +60,7 @@ public abstract class JsonPatchOperationSerializationTest
         final String resource = "/jsonpatch/" + directoryName + "/" + operationName + ".json";
         node = JsonLoader.fromResource(resource);
         mapper = JacksonUtils.newMapper();
-        factory = (new JsonPatchFactoryBuilder())
+        factory = (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
                 .addOperation(operationName, c)
                 .build();
         this.c = c;
@@ -83,18 +84,13 @@ public abstract class JsonPatchOperationSerializationTest
     public final void patchOperationSerializationWorks(final JsonNode input)
         throws IOException, JsonPatchException, JsonProcessingException
     {
-        final JsonPatchOperation op
-            = factory.operationFromJson(input);
-
-        /*
-         * Check that the class of the operation is what is expected
-         */
-        assertSame(op.getClass(), c);
+        ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(input);
+        final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);
 
         /*
          * Now, write the operation as a String...
          */
-        final String out = mapper.writeValueAsString(op);
+        final String out = mapper.writeValueAsString(patchWithOp);
 
         /*
          * And read it as a JsonNode again, then test for equality.
@@ -104,7 +100,7 @@ public abstract class JsonPatchOperationSerializationTest
          * this event, and we trust its .toString().
          */
         final JsonNode output = JacksonUtils.getReader().readTree(out);
-        assertTrue(EQUIVALENCE.equivalent(input, output));
+        assertTrue(EQUIVALENCE.equivalent(patchWithOpNode, output));
     }
 }
 

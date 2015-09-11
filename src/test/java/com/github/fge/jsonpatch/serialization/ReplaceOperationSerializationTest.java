@@ -24,7 +24,7 @@ import com.github.fge.jsonpatch.ReplaceOperation;
 import java.io.IOException;
 
 public final class ReplaceOperationSerializationTest
-    extends Rfc6902JsonPatchOperationSerializationTest
+    extends StandardJsonPatchOperationSerializationTest
 {
     public ReplaceOperationSerializationTest()
         throws IOException

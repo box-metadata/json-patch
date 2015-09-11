@@ -36,18 +36,17 @@ import static org.testng.Assert.*;
 public abstract class JsonPatchTestSuite
 {
     private final JsonNode testNode;
-    private final JsonPatchFactory factory;
+    private final RegistryBasedJsonPatchFactory factory;
 
     public JsonPatchTestSuite(String directory,
             Map<String, Class<? extends JsonPatchOperation>> additionalOperations)
         throws IOException
     {
         testNode = JsonLoader.fromResource("/jsonpatch/" + directory + "/testsuite.json");
-        JsonPatchFactoryBuilder factoryBuilder = new JsonPatchFactoryBuilder();
-        for (Map.Entry<String, Class<? extends JsonPatchOperation>> entry : additionalOperations.entrySet()) {
-            factoryBuilder.addOperation(entry.getKey(), entry.getValue());
-        }
-        factory = factoryBuilder.build();
+        factory = (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
+                .addOperations(JsonPatchFactoryUtil.defaultOperations())
+                .addOperations(additionalOperations)
+                .build();
     }
 
     @DataProvider

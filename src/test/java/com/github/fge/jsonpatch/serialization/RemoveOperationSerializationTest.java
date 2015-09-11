@@ -24,7 +24,7 @@ import com.github.fge.jsonpatch.RemoveOperation;
 import java.io.IOException;
 
 public final class RemoveOperationSerializationTest
-    extends Rfc6902JsonPatchOperationSerializationTest
+    extends StandardJsonPatchOperationSerializationTest
 {
     public RemoveOperationSerializationTest()
         throws IOException

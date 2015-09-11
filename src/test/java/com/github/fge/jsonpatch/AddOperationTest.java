@@ -22,7 +22,7 @@ package com.github.fge.jsonpatch;
 import java.io.IOException;
 
 public final class AddOperationTest
-    extends Rfc6902JsonPatchOperationTest
+    extends StandardJsonPatchOperationTest
 {
     public AddOperationTest()
         throws IOException

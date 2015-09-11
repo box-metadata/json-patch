@@ -21,7 +21,7 @@ package com.github.fge.jsonpatch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jackson.JsonNumEquals;
@@ -49,7 +49,7 @@ public abstract class JsonPatchOperationTest
 
     private final JsonNode errors;
     private final JsonNode ops;
-    private final JsonPatchFactory factory;
+    private final RegistryBasedJsonPatchFactory factory;
 
     protected JsonPatchOperationTest(final String operationName,
             final String directoryName,
@@ -60,7 +60,7 @@ public abstract class JsonPatchOperationTest
         final JsonNode node = JsonLoader.fromResource(resource);
         errors = node.get("errors");
         ops = node.get("ops");
-        factory = (new JsonPatchFactoryBuilder())
+        factory = (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
                 .addOperation(operationName, op)
                 .build();
     }
@@ -86,10 +86,11 @@ public abstract class JsonPatchOperationTest
         final JsonNode node, final String message)
         throws IOException, JsonPatchException, JsonProcessingException
     {
-        final JsonPatchOperation op = factory.operationFromJson(patch);
+        ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(patch);
+        final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);
 
         try {
-            op.apply(node);
+            patchWithOp.apply(node);
             fail("No exception thrown!!");
         } catch (JsonPatchException e) {
             assertEquals(e.getMessage(), message);
@@ -116,8 +117,9 @@ public abstract class JsonPatchOperationTest
         final JsonNode node, final JsonNode expected)
         throws IOException, JsonPatchException, JsonProcessingException
     {
-        final JsonPatchOperation op = factory.operationFromJson(patch);
-        final JsonNode actual = op.apply(node);
+        ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(patch);
+        final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);
+        final JsonNode actual = patchWithOp.apply(node);
 
         assertTrue(EQUIVALENCE.equivalent(actual, expected),
             "patched node differs from expectations: expected " + expected
