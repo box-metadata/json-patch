@@ -13,9 +13,6 @@ import java.util.Map;
 
 import static org.testng.Assert.*;
 
-/**
- *
- */
 public final class JsonPatchFactoryTest {
     private final RegistryBasedJsonPatchFactory factory;
 

@@ -20,13 +20,34 @@ public class JsonPatchFactoryUtil {
                 put("test", TestOperation.class);
             }}
         );
-    private static JsonPatchFactory DEFAULT_FACTORY;
+    private static Map<String, Class<? extends JsonPatchOperation>> EXTENDED_OPERATIONS =
+        Collections.unmodifiableMap(
+            new HashMap<String, Class<? extends JsonPatchOperation>>() {{
+                put("omit", OmitOperation.class);
+            }}
+        );
+    private static JsonPatchFactory DEFAULT_FACTORY =
+            (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
+                .addOperations(DEFAULT_OPERATIONS)
+                .build();
+
+    private static JsonPatchFactory EXTENDED_FACTORY =
+            (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
+                .addOperations(DEFAULT_OPERATIONS)
+                .addOperations(EXTENDED_OPERATIONS)
+                .build();
 
     public static Map<String, Class<? extends JsonPatchOperation>> defaultOperations() {
         return DEFAULT_OPERATIONS;
     }
     public static JsonPatchFactory defaultFactory() {
         return DEFAULT_FACTORY;
+    }
+    public static Map<String, Class<? extends JsonPatchOperation>> extendedOperations() {
+        return EXTENDED_OPERATIONS;
+    }
+    public static JsonPatchFactory extendedFactory() {
+        return EXTENDED_FACTORY;
     }
 
     private JsonPatchFactoryUtil() {
