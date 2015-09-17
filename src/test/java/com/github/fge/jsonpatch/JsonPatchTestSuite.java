@@ -39,11 +39,11 @@ public abstract class JsonPatchTestSuite
     private final RegistryBasedJsonPatchFactory factory;
 
     public JsonPatchTestSuite(String directory,
-            Map<String, Class<? extends JsonPatchOperation>> additionalOperations)
+            List<JsonPatchOperationFactory> additionalOperations)
         throws IOException
     {
         testNode = JsonLoader.fromResource("/jsonpatch/" + directory + "/testsuite.json");
-        factory = (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
+        factory = (new RegistryBasedJsonPatchFactory.Builder())
                 .addOperations(JsonPatchFactoryUtil.defaultOperations())
                 .addOperations(additionalOperations)
                 .build();
@@ -51,7 +51,7 @@ public abstract class JsonPatchTestSuite
 
     @DataProvider
     public Iterator<Object[]> getTests()
-        throws IOException, JsonPatchException
+        throws JsonPatchException
     {
         final List<Object[]> list = Lists.newArrayList();
 

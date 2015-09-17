@@ -52,6 +52,19 @@ public final class JsonPatchTest
     }
 
     @Test
+    public void nullInputsDuringBuildAreRejected()
+        throws JsonPatchException
+    {
+        try {
+            JsonPatch.fromJson(null);
+            fail("No exception thrown!!");
+        } catch (NullPointerException e) {
+            assertEquals(e.getMessage(), BUNDLE.getMessage(
+                "jsonPatch.nullInput"));
+        }
+    }
+
+    @Test
     public void cannotPatchNull()
         throws JsonPatchException
     {

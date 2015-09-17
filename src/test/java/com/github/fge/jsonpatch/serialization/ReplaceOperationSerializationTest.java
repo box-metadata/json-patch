@@ -19,7 +19,7 @@
 
 package com.github.fge.jsonpatch.serialization;
 
-import com.github.fge.jsonpatch.ReplaceOperation;
+import com.github.fge.jsonpatch.ReplaceOperationFactory;
 
 import java.io.IOException;
 
@@ -29,6 +29,6 @@ public final class ReplaceOperationSerializationTest
     public ReplaceOperationSerializationTest()
         throws IOException
     {
-        super("replace", ReplaceOperation.class);
+        super(new ReplaceOperationFactory());
     }
 }

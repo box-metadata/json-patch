@@ -19,7 +19,7 @@
 
 package com.github.fge.jsonpatch.serialization;
 
-import com.github.fge.jsonpatch.CopyOperation;
+import com.github.fge.jsonpatch.CopyOperationFactory;
 
 import java.io.IOException;
 
@@ -29,6 +29,6 @@ public final class CopyOperationSerializationTest
     public CopyOperationSerializationTest()
         throws IOException
     {
-        super("copy", CopyOperation.class);
+        super(new CopyOperationFactory());
     }
 }

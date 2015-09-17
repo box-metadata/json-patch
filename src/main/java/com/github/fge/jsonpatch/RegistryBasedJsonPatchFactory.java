@@ -1,9 +1,5 @@
 package com.github.fge.jsonpatch;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.msgsimple.bundle.MessageBundle;
@@ -18,7 +14,7 @@ import java.util.*;
  */
 public class RegistryBasedJsonPatchFactory implements JsonPatchFactory
 {
-    private Map<String, Class<? extends JsonPatchOperation>> operations;
+    private final Map<String, JsonPatchOperationFactory> operationFactories;
 
     private static final MessageBundle BUNDLE
         = MessageBundles.getBundle(JsonPatchMessages.class);
@@ -26,37 +22,47 @@ public class RegistryBasedJsonPatchFactory implements JsonPatchFactory
     /**
      * Builds a JsonPatchFactory based on the patch operations we want to register
      */
-    public static class RegistryBasedJsonPatchFactoryBuilder {
-        private Map<String, Class<? extends JsonPatchOperation>> operations;
+    public static class Builder
+    {
+        private Map<String, JsonPatchOperationFactory> operationFactories;
 
-        public RegistryBasedJsonPatchFactoryBuilder() {
-            this.operations = new HashMap<String, Class<? extends JsonPatchOperation>>();
+        public Builder()
+        {
+            this.operationFactories = new HashMap<String, JsonPatchOperationFactory>();
         }
 
-        public RegistryBasedJsonPatchFactoryBuilder addOperation(final String operationName, final Class<? extends JsonPatchOperation> c) {
-            this.operations.put(operationName, c);
+        public Builder addOperation(final JsonPatchOperationFactory operationFactory)
+        {
+            this.operationFactories.put(operationFactory.getOperationName(), operationFactory);
             return this;
         }
-        public RegistryBasedJsonPatchFactoryBuilder addOperations(Map<String, Class<? extends JsonPatchOperation>> ops) {
-            this.operations.putAll(ops);
+        public Builder addOperations(final List<JsonPatchOperationFactory> ops)
+        {
+            for (JsonPatchOperationFactory operationFactory : ops) {
+                this.operationFactories.put(operationFactory.getOperationName(), operationFactory);
+            }
             return this;
         }
 
-        public RegistryBasedJsonPatchFactory build() {
+        public RegistryBasedJsonPatchFactory build()
+        {
             return new RegistryBasedJsonPatchFactory(this);
         }
     }
 
-    private RegistryBasedJsonPatchFactory(RegistryBasedJsonPatchFactoryBuilder builder) {
-        this.operations = new HashMap<String, Class<? extends JsonPatchOperation>>(builder.operations);
+    private RegistryBasedJsonPatchFactory(final Builder builder)
+    {
+        this.operationFactories = new HashMap<String, JsonPatchOperationFactory>(builder.operationFactories);
     }
 
-    public Class<? extends JsonPatchOperation> getOperation(String opName) {
-        return this.operations.get(opName);
+    public JsonPatchOperationFactory getOperation(final String opName)
+    {
+        return this.operationFactories.get(opName);
     }
 
-    public JsonPatch fromJson(JsonNode node)
-            throws JsonPatchException, IOException, JsonProcessingException {
+    public JsonPatch fromJson(final JsonNode node)
+            throws JsonPatchException
+    {
         BUNDLE.checkNotNull(node, "jsonPatch.nullInput");
         if (!node.isArray()) {
             throw new JsonPatchException(BUNDLE.getMessage(
@@ -71,15 +77,16 @@ public class RegistryBasedJsonPatchFactory implements JsonPatchFactory
         return new JsonPatch(parsedOps);
     }
 
-    private JsonPatchOperation operationFromJson(JsonNode node)
-        throws JsonPatchException, IOException, JsonProcessingException {
+    private JsonPatchOperation operationFromJson(final JsonNode node)
+            throws JsonPatchException
+    {
         if (!node.isObject()) {
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.deserFailed"));
         }
         String op = node.get("op").asText();
-        if (this.operations.containsKey(op)) {
-            JsonPatchOperation parsedOp = JacksonUtils.getReader().withType(this.operations.get(op)).readValue(node);
+        if (this.operationFactories.containsKey(op)) {
+            JsonPatchOperation parsedOp = this.operationFactories.get(op).create(node);
             return parsedOp;
         } else {
             throw new JsonPatchException(BUNDLE.getMessage(

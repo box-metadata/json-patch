@@ -137,7 +137,7 @@ final class DiffOperation
             @Override
             JsonPatchOperation toOperation(final DiffOperation op)
             {
-                return new MoveOperation(op.from, op.path);
+                return new MoveOperation("move", op.from, op.path);
             }
         },
         REMOVE

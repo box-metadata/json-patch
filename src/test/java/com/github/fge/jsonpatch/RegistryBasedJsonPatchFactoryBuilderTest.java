@@ -4,22 +4,22 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
-/**
- *
- */
-public final class RegistryBasedJsonPatchFactoryBuilderTest {
+public final class RegistryBasedJsonPatchFactoryBuilderTest
+{
     @Test
-    public void buildCreatesJsonPatchFactoryWithNoOperations() {
+    public void buildCreatesJsonPatchFactoryWithNoOperations()
+    {
         RegistryBasedJsonPatchFactory factory =
-                new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder().build();
+                new RegistryBasedJsonPatchFactory.Builder().build();
         assertNull(factory.getOperation("add"));
     }
 
     @Test
-    public void buildCreatesJsonPatchFactoryWithAdditionalOperations() {
+    public void buildCreatesJsonPatchFactoryWithAdditionalOperations()
+    {
         RegistryBasedJsonPatchFactory factory =
-                new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder()
-                        .addOperation("add", AddOperation.class)
+                new RegistryBasedJsonPatchFactory.Builder()
+                        .addOperation(new AddOperationFactory())
                         .build();
         assertNotNull(factory.getOperation("add"));
     }

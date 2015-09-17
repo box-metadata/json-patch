@@ -4,21 +4,26 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
-public final class JsonPatchFactoryUtilTest {
+public final class JsonPatchFactoryUtilTest
+{
     @Test
-    public void defaultFactoryReturnsFactory() {
+    public void defaultFactoryReturnsFactory()
+    {
         assertTrue(JsonPatchFactoryUtil.defaultFactory() instanceof JsonPatchFactory);
     }
     @Test
-    public void defaultOperationsReturnsNonEmptyMap() {
+    public void defaultOperationsReturnsNonEmptyMap()
+    {
         assertTrue(JsonPatchFactoryUtil.defaultOperations().size() > 0);
     }
     @Test
-    public void extendedFactoryReturnsFactory() {
+    public void extendedFactoryReturnsFactory()
+    {
         assertTrue(JsonPatchFactoryUtil.extendedFactory() instanceof JsonPatchFactory);
     }
     @Test
-    public void extendedOperationsReturnsNonEmptyMap() {
+    public void extendedOperationsReturnsNonEmptyMap()
+    {
         assertTrue(JsonPatchFactoryUtil.extendedOperations().size() > 0);
     }
 }

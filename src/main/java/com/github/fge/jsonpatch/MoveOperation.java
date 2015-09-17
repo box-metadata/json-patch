@@ -87,3 +87,4 @@ public final class MoveOperation
         return add.apply(remove.apply(node));
     }
 }
+

@@ -51,17 +51,16 @@ public abstract class JsonPatchOperationTest
     private final JsonNode ops;
     private final RegistryBasedJsonPatchFactory factory;
 
-    protected JsonPatchOperationTest(final String operationName,
-            final String directoryName,
-            final Class<? extends JsonPatchOperation> op)
+    protected JsonPatchOperationTest(final String directoryName,
+            final JsonPatchOperationFactory operationFactory)
         throws IOException
     {
-        final String resource = "/jsonpatch/" + directoryName + "/" + operationName + ".json";
+        final String resource = "/jsonpatch/" + directoryName + "/" + operationFactory.getOperationName() + ".json";
         final JsonNode node = JsonLoader.fromResource(resource);
         errors = node.get("errors");
         ops = node.get("ops");
-        factory = (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
-                .addOperation(operationName, op)
+        factory = (new RegistryBasedJsonPatchFactory.Builder())
+                .addOperation(operationFactory)
                 .build();
     }
 
@@ -84,7 +83,7 @@ public abstract class JsonPatchOperationTest
     @Test(dataProvider = "getErrors")
     public final void errorsAreCorrectlyReported(final JsonNode patch,
         final JsonNode node, final String message)
-        throws IOException, JsonPatchException, JsonProcessingException
+        throws JsonPatchException
     {
         ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(patch);
         final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);
@@ -115,7 +114,7 @@ public abstract class JsonPatchOperationTest
     @Test(dataProvider = "getOps")
     public final void operationsYieldExpectedResults(final JsonNode patch,
         final JsonNode node, final JsonNode expected)
-        throws IOException, JsonPatchException, JsonProcessingException
+        throws JsonPatchException
     {
         ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(patch);
         final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);

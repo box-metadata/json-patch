@@ -26,10 +26,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jackson.JsonNumEquals;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.RegistryBasedJsonPatchFactory;
-import com.github.fge.jsonpatch.JsonPatchOperation;
+import com.github.fge.jsonpatch.*;
 import com.google.common.base.Equivalence;
 import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
@@ -47,23 +44,20 @@ public abstract class JsonPatchOperationSerializationTest
     private static final Equivalence<JsonNode> EQUIVALENCE
         = JsonNumEquals.getInstance();
 
-    private final Class<? extends JsonPatchOperation> c;
     private final JsonNode node;
     private final ObjectMapper mapper;
     private final RegistryBasedJsonPatchFactory factory;
 
-    protected JsonPatchOperationSerializationTest(final String operationName,
-        final String directoryName,
-        final Class<? extends JsonPatchOperation> c)
+    protected JsonPatchOperationSerializationTest(final String directoryName,
+        final JsonPatchOperationFactory operationFactory)
         throws IOException
     {
-        final String resource = "/jsonpatch/" + directoryName + "/" + operationName + ".json";
+        final String resource = "/jsonpatch/" + directoryName + "/" + operationFactory.getOperationName() + ".json";
         node = JsonLoader.fromResource(resource);
         mapper = JacksonUtils.newMapper();
-        factory = (new RegistryBasedJsonPatchFactory.RegistryBasedJsonPatchFactoryBuilder())
-                .addOperation(operationName, c)
+        factory = (new RegistryBasedJsonPatchFactory.Builder())
+                .addOperation(operationFactory)
                 .build();
-        this.c = c;
     }
 
     @DataProvider
@@ -82,7 +76,7 @@ public abstract class JsonPatchOperationSerializationTest
 
     @Test(dataProvider = "getInputs")
     public final void patchOperationSerializationWorks(final JsonNode input)
-        throws IOException, JsonPatchException, JsonProcessingException
+        throws IOException, JsonPatchException
     {
         ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(input);
         final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);

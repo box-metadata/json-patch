@@ -119,11 +119,12 @@ public final class JsonPatch
      *
      * @param node the JSON representation of the generated JSON Patch
      * @return a JSON Patch
-     * @throws IOException input is not a valid JSON patch
+     * @throws JsonPatchException input is not a valid JSON patch
      * @throws NullPointerException input is null
      */
     public static JsonPatch fromJson(final JsonNode node)
-            throws IOException, JsonPatchException {
+            throws JsonPatchException
+    {
         BUNDLE.checkNotNull(node, "jsonPatch.nullInput");
         return JsonPatchFactoryUtil.defaultFactory().fromJson(node);
     }

@@ -12,7 +12,11 @@ import com.google.common.base.Equivalence;
 import com.google.common.collect.Iterables;
 
 /**
+ * Extended JSON Patch {@code omit} operation.
  *
+ * The operation will remove the {@code value} at {@code path} if it exists.
+ * It will do nothing if the actual value at {@code path} is not equal to {@code value}.
+ * It will throw a "no such path" error if there is no value at {@code path}.
  */
 public class OmitOperation extends PathValueOperation {
 
@@ -29,19 +33,20 @@ public class OmitOperation extends PathValueOperation {
     public JsonNode apply(final JsonNode node)
         throws JsonPatchException
     {
+        final JsonNode ret = node.deepCopy();
         if (path.isEmpty()) {
-            if (EQUIVALENCE.equivalent(node, value)) {
+            if (EQUIVALENCE.equivalent(ret, value)) {
                 return MissingNode.getInstance();
             } else {
-                return node.deepCopy();
+                return ret;
             }
         }
-        if (path.path(node).isMissingNode())
+        final JsonNode valueAtPath = path.path(ret);
+        if (valueAtPath.isMissingNode())
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.noSuchPath"));
 
-        final JsonNode ret = node.deepCopy();
-        if (EQUIVALENCE.equivalent(path.path(ret), value)) {
+        if (EQUIVALENCE.equivalent(valueAtPath, value)) {
             final JsonNode parent = path.parent().get(ret);
             final String rawToken = Iterables.getLast(path).getToken().getRaw();
             if (parent.isObject())
@@ -52,3 +57,4 @@ public class OmitOperation extends PathValueOperation {
         return ret;
     }
 }
+

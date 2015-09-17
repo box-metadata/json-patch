@@ -4,15 +4,12 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-/**
- *
- */
 @Test
-public abstract class ExtendedJsonPatchOperationTest extends JsonPatchOperationTest {
-
-    protected ExtendedJsonPatchOperationTest(final String operationName, final Class<? extends JsonPatchOperation> op)
+public abstract class ExtendedJsonPatchOperationTest extends JsonPatchOperationTest
+{
+    protected ExtendedJsonPatchOperationTest(final JsonPatchOperationFactory operationFactory)
         throws IOException
     {
-        super(operationName, "extended", op);
+        super("extended", operationFactory);
     }
 }
