@@ -1,0 +1,11 @@
+[
+    {
+        "comment": "omit operation is able to be parsed and applied",
+        "doc": {"foo": "bar"},
+        "patch": [{"op": "omit", "path": "/foo", "value": "bar"}],
+        "expected": {}
+    },
+    {
+        "comment": "tests done"
+    }
+]

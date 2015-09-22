@@ -67,6 +67,8 @@ import com.google.common.collect.Iterables;
 public final class AddOperation
     extends PathValueOperation
 {
+    public static final String OPERATION_NAME = "add";
+
     private static final ReferenceToken LAST_ARRAY_ELEMENT
         = ReferenceToken.fromRaw("-");
 
@@ -74,7 +76,7 @@ public final class AddOperation
     public AddOperation(@JsonProperty("path") final JsonPointer path,
         @JsonProperty("value") final JsonNode value)
     {
-        super("add", path, value);
+        super(OPERATION_NAME, path, value);
     }
 
     @Override
@@ -137,3 +139,4 @@ public final class AddOperation
         return ret;
     }
 }
+

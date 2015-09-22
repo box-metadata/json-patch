@@ -22,11 +22,11 @@ package com.github.fge.jsonpatch;
 import java.io.IOException;
 
 public final class ReplaceOperationTest
-    extends JsonPatchOperationTest
+    extends StandardJsonPatchOperationTest
 {
     public ReplaceOperationTest()
         throws IOException
     {
-        super("replace");
+        super(new ReplaceOperationFactory());
     }
 }

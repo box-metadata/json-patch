@@ -53,7 +53,7 @@ public final class JsonPatchTest
 
     @Test
     public void nullInputsDuringBuildAreRejected()
-        throws IOException
+        throws JsonPatchException
     {
         try {
             JsonPatch.fromJson(null);

@@ -19,12 +19,14 @@
 
 package com.github.fge.jsonpatch.serialization;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jackson.JsonNumEquals;
-import com.github.fge.jsonpatch.JsonPatchOperation;
+import com.github.fge.jsonpatch.*;
 import com.google.common.base.Equivalence;
 import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
@@ -42,18 +44,20 @@ public abstract class JsonPatchOperationSerializationTest
     private static final Equivalence<JsonNode> EQUIVALENCE
         = JsonNumEquals.getInstance();
 
-    private final Class<? extends JsonPatchOperation> c;
     private final JsonNode node;
     private final ObjectMapper mapper;
+    private final RegistryBasedJsonPatchFactory factory;
 
-    protected JsonPatchOperationSerializationTest(final String prefix,
-        final Class<? extends JsonPatchOperation> c)
+    protected JsonPatchOperationSerializationTest(final String directoryName,
+        final JsonPatchOperationFactory operationFactory)
         throws IOException
     {
-        final String resource = "/jsonpatch/" + prefix + ".json";
+        final String resource = "/jsonpatch/" + directoryName + "/" + operationFactory.getOperationName() + ".json";
         node = JsonLoader.fromResource(resource);
         mapper = JacksonUtils.newMapper();
-        this.c = c;
+        factory = (new RegistryBasedJsonPatchFactory.Builder())
+                .addOperation(operationFactory)
+                .build();
     }
 
     @DataProvider
@@ -72,24 +76,15 @@ public abstract class JsonPatchOperationSerializationTest
 
     @Test(dataProvider = "getInputs")
     public final void patchOperationSerializationWorks(final JsonNode input)
-        throws IOException
+        throws IOException, JsonPatchException
     {
-        /*
-         * Deserialize a string input
-         */
-        final String in = input.toString();
-        final JsonPatchOperation op
-            = mapper.readValue(in, JsonPatchOperation.class);
-
-        /*
-         * Check that the class of the operation is what is expected
-         */
-        assertSame(op.getClass(), c);
+        ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(input);
+        final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);
 
         /*
          * Now, write the operation as a String...
          */
-        final String out = mapper.writeValueAsString(op);
+        final String out = mapper.writeValueAsString(patchWithOp);
 
         /*
          * And read it as a JsonNode again, then test for equality.
@@ -99,7 +94,7 @@ public abstract class JsonPatchOperationSerializationTest
          * this event, and we trust its .toString().
          */
         final JsonNode output = JacksonUtils.getReader().readTree(out);
-        assertTrue(EQUIVALENCE.equivalent(input, output));
+        assertTrue(EQUIVALENCE.equivalent(patchWithOpNode, output));
     }
 }
 

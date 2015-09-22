@@ -31,17 +31,6 @@ import com.github.fge.msgsimple.load.MessageBundles;
 import static com.fasterxml.jackson.annotation.JsonSubTypes.*;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.*;
 
-@JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "op")
-
-@JsonSubTypes({
-    @Type(name = "add", value = AddOperation.class),
-    @Type(name = "copy", value = CopyOperation.class),
-    @Type(name = "move", value = MoveOperation.class),
-    @Type(name = "remove", value = RemoveOperation.class),
-    @Type(name = "replace", value = ReplaceOperation.class),
-    @Type(name = "test", value = TestOperation.class)
-})
-
 /**
  * Base abstract class for one patch operation
  *
@@ -56,34 +45,9 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.*;
  * </ul>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class JsonPatchOperation
-    implements JsonSerializable
+public interface JsonPatchOperation
+    extends JsonSerializable
 {
-    protected static final MessageBundle BUNDLE
-        = MessageBundles.getBundle(JsonPatchMessages.class);
-
-    protected final String op;
-
-    /*
-     * Note: no need for a custom deserializer, Jackson will try and find a
-     * constructor with a single string argument and use it.
-     *
-     * However, we need to serialize using .toString().
-     */
-    protected final JsonPointer path;
-
-    /**
-     * Constructor
-     *
-     * @param op the operation name
-     * @param path the JSON Pointer for this operation
-     */
-    protected JsonPatchOperation(final String op, final JsonPointer path)
-    {
-        this.op = op;
-        this.path = path;
-    }
-
     /**
      * Apply this operation to a JSON value
      *
@@ -91,9 +55,9 @@ public abstract class JsonPatchOperation
      * @return the patched value
      * @throws JsonPatchException operation failed to apply to this value
      */
-    public abstract JsonNode apply(final JsonNode node)
+    public JsonNode apply(final JsonNode node)
         throws JsonPatchException;
 
     @Override
-    public abstract String toString();
+    public String toString();
 }

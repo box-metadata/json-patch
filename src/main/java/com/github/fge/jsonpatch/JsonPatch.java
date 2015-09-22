@@ -119,15 +119,14 @@ public final class JsonPatch
      *
      * @param node the JSON representation of the generated JSON Patch
      * @return a JSON Patch
-     * @throws IOException input is not a valid JSON patch
+     * @throws JsonPatchException input is not a valid JSON patch
      * @throws NullPointerException input is null
      */
     public static JsonPatch fromJson(final JsonNode node)
-        throws IOException
+            throws JsonPatchException
     {
         BUNDLE.checkNotNull(node, "jsonPatch.nullInput");
-        return JacksonUtils.getReader().withType(JsonPatch.class)
-            .readValue(node);
+        return JsonPatchFactoryUtil.defaultFactory().fromJson(node);
     }
 
     /**
