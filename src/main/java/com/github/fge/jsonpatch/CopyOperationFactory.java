@@ -4,7 +4,7 @@ public final class CopyOperationFactory extends JsonPatchOperationFactoryBase
 {
     public String getOperationName()
     {
-        return "copy";
+        return CopyOperation.OPERATION_NAME;
     }
     public Class<? extends JsonPatchOperation> getOperationClass()
     {

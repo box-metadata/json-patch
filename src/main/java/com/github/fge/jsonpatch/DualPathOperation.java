@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.load.MessageBundles;
 
 import java.io.IOException;
 
@@ -33,10 +35,17 @@ import java.io.IOException;
  * Base class for JSON Patch operations taking two JSON Pointers as arguments
  */
 public abstract class DualPathOperation
-    extends JsonPatchOperation
+    implements JsonPatchOperation
 {
+    protected static final MessageBundle BUNDLE
+        = MessageBundles.getBundle(JsonPatchMessages.class);
+
+    protected final String op;
+
     @JsonSerialize(using = ToStringSerializer.class)
     protected final JsonPointer from;
+
+    protected final JsonPointer path;
 
     /**
      * Protected constructor
@@ -48,8 +57,9 @@ public abstract class DualPathOperation
     protected DualPathOperation(final String op, final JsonPointer from,
         final JsonPointer path)
     {
-        super(op, path);
+        this.op = op;
         this.from = from;
+        this.path = path;
     }
 
     @Override

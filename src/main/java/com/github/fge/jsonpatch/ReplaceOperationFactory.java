@@ -4,7 +4,7 @@ public final class ReplaceOperationFactory extends JsonPatchOperationFactoryBase
 {
     public String getOperationName()
     {
-        return "replace";
+        return ReplaceOperation.OPERATION_NAME;
     }
     public Class<? extends JsonPatchOperation> getOperationClass()
     {

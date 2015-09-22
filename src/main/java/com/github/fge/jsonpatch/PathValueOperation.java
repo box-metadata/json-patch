@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.load.MessageBundles;
 
 import java.io.IOException;
 
@@ -33,8 +35,15 @@ import java.io.IOException;
  * Base class for patch operations taking a value in addition to a path
  */
 public abstract class PathValueOperation
-    extends JsonPatchOperation
+    implements JsonPatchOperation
 {
+    protected static final MessageBundle BUNDLE
+        = MessageBundles.getBundle(JsonPatchMessages.class);
+
+    protected final String op;
+
+    protected final JsonPointer path;
+
     @JsonSerialize
     protected final JsonNode value;
 
@@ -48,7 +57,8 @@ public abstract class PathValueOperation
     protected PathValueOperation(final String op, final JsonPointer path,
         final JsonNode value)
     {
-        super(op, path);
+        this.op = op;
+        this.path = path;
         this.value = value.deepCopy();
     }
 

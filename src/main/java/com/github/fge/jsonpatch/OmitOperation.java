@@ -18,7 +18,9 @@ import com.google.common.collect.Iterables;
  * It will do nothing if the actual value at {@code path} is not equal to {@code value}.
  * It will throw a "no such path" error if there is no value at {@code path}.
  */
-public class OmitOperation extends PathValueOperation {
+public class OmitOperation extends PathValueOperation
+{
+    public static final String OPERATION_NAME = "omit";
 
     private static final Equivalence<JsonNode> EQUIVALENCE
         = JsonNumEquals.getInstance();
@@ -26,7 +28,7 @@ public class OmitOperation extends PathValueOperation {
     public OmitOperation(@JsonProperty("path") final JsonPointer path,
                          @JsonProperty("value") final JsonNode value)
     {
-        super("omit", path, value);
+        super(OPERATION_NAME, path, value);
     }
 
     @Override

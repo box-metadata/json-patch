@@ -42,6 +42,8 @@ import com.google.common.base.Equivalence;
 public final class TestOperation
     extends PathValueOperation
 {
+    public static final String OPERATION_NAME = "test";
+
     private static final Equivalence<JsonNode> EQUIVALENCE
         = JsonNumEquals.getInstance();
 
@@ -49,7 +51,7 @@ public final class TestOperation
     public TestOperation(@JsonProperty("path") final JsonPointer path,
         @JsonProperty("value") final JsonNode value)
     {
-        super("test", path, value);
+        super(OPERATION_NAME, path, value);
     }
 
     @Override

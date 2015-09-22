@@ -30,6 +30,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
@@ -41,12 +43,22 @@ import java.io.IOException;
  * is an error condition if no JSON value exists at that pointer.</p>
  */
 public final class RemoveOperation
-    extends JsonPatchOperation
+    implements JsonPatchOperation
 {
+    public static final String OPERATION_NAME = "remove";
+
+    protected static final MessageBundle BUNDLE
+        = MessageBundles.getBundle(JsonPatchMessages.class);
+
+    protected final String op;
+
+    protected final JsonPointer path;
+
     @JsonCreator
     public RemoveOperation(@JsonProperty("path") final JsonPointer path)
     {
-        super("remove", path);
+        this.op = OPERATION_NAME;
+        this.path = path;
     }
 
     @Override

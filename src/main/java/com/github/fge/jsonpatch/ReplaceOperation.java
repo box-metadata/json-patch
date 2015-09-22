@@ -39,11 +39,13 @@ import com.google.common.collect.Iterables;
 public final class ReplaceOperation
     extends PathValueOperation
 {
+    public static final String OPERATION_NAME = "replace";
+
     @JsonCreator
     public ReplaceOperation(@JsonProperty("path") final JsonPointer path,
         @JsonProperty("value") final JsonNode value)
     {
-        super("replace", path, value);
+        super(OPERATION_NAME, path, value);
     }
 
     @Override
