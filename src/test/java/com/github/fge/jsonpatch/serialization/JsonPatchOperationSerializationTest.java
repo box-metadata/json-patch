@@ -19,9 +19,10 @@
 
 package com.github.fge.jsonpatch.serialization;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.JsonLoader;
@@ -48,13 +49,24 @@ public abstract class JsonPatchOperationSerializationTest
     private final ObjectMapper mapper;
     private final RegistryBasedJsonPatchFactory factory;
 
+    /**
+     * @param directoryName The directory name for the data provider JSON
+     * @param operationFactory The JsonPatchOperationFactory for the particular operation we want to test serialization
+     * @param mapperModules ObjectMapper Modules we want to register for this mapper
+     *                      (e.g. if we want to use a different deserializer for the extended JSON patch operations)
+     * @throws IOException
+     */
     protected JsonPatchOperationSerializationTest(final String directoryName,
-        final JsonPatchOperationFactory operationFactory)
+        final JsonPatchOperationFactory operationFactory,
+        final JsonPatchDeserializer deserializer)
         throws IOException
     {
         final String resource = "/jsonpatch/" + directoryName + "/" + operationFactory.getOperationName() + ".json";
         node = JsonLoader.fromResource(resource);
         mapper = JacksonUtils.newMapper();
+        Module module = new SimpleModule()
+                .addDeserializer(JsonPatch.class, deserializer);
+        mapper.registerModule(module);
         factory = (new RegistryBasedJsonPatchFactory.Builder())
                 .addOperation(operationFactory)
                 .build();
@@ -78,8 +90,8 @@ public abstract class JsonPatchOperationSerializationTest
     public final void patchOperationSerializationWorks(final JsonNode input)
         throws IOException, JsonPatchException
     {
-        ArrayNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(input);
-        final JsonPatch patchWithOp = factory.fromJson(patchWithOpNode);
+        JsonNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(input);
+        final JsonPatch patchWithOp = mapper.treeToValue(patchWithOpNode, JsonPatch.class);
 
         /*
          * Now, write the operation as a String...

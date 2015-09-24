@@ -1,5 +1,7 @@
 package com.github.fge.jsonpatch.serialization;
 
+import com.github.fge.jsonpatch.JsonPatchDeserializer;
+import com.github.fge.jsonpatch.JsonPatchFactoryUtil;
 import com.github.fge.jsonpatch.JsonPatchOperationFactory;
 import org.testng.annotations.Test;
 
@@ -11,7 +13,7 @@ public abstract class ExtendedJsonPatchOperationSerializationTest extends JsonPa
     protected ExtendedJsonPatchOperationSerializationTest(final JsonPatchOperationFactory operationFactory)
         throws IOException
     {
-        super("extended", operationFactory);
+        super("extended", operationFactory, new JsonPatchDeserializer(JsonPatchFactoryUtil.extendedFactory()));
     }
 }
 
