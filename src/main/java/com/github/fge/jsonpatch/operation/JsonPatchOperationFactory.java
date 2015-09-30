@@ -12,12 +12,6 @@ public interface JsonPatchOperationFactory
     public String getOperationName();
 
     /**
-     * Gets the class of JsonPatchOperation that this factory will create.
-     * @return
-     */
-    public Class<? extends JsonPatchOperation> getOperationClass();
-
-    /**
      * Creates a JsonPatchOperation from a JsonNode
      * @param node The JsonNode to create the JsonPatchOperation from
      * @return The JsonPatchOperation
