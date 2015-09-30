@@ -18,6 +18,12 @@ public abstract class JsonPatchOperationFactoryBase implements JsonPatchOperatio
     private static final MessageBundle BUNDLE
         = MessageBundles.getBundle(JsonPatchMessages.class);
 
+    /**
+     * Gets the class of JsonPatchOperation that this factory will create.
+     * @return
+     */
+    public abstract Class<? extends JsonPatchOperation> getOperationClass();
+
     public JsonPatchOperation create(JsonNode node)
         throws JsonPatchException
     {

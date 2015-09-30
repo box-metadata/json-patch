@@ -5,5 +5,5 @@ package com.github.fge.jsonpatch.operation.policy;
  */
 public enum PathMissingPolicy
 {
-    THROW, SKIP
+    THROW, SKIP, NOT_APPLICABLE
 }
