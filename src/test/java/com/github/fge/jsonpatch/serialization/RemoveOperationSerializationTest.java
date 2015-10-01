@@ -29,6 +29,6 @@ public final class RemoveOperationSerializationTest
     public RemoveOperationSerializationTest()
         throws IOException
     {
-        super(new RemoveOperationFactory());
+        super((new RemoveOperationFactory()).getOperationName());
     }
 }

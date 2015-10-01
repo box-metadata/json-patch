@@ -47,7 +47,6 @@ public abstract class JsonPatchOperationSerializationTest
 
     private final JsonNode node;
     private final ObjectMapper mapper;
-    private final RegistryBasedJsonPatchFactory factory;
 
     /**
      * @param directoryName The directory name for the data provider JSON
@@ -57,19 +56,16 @@ public abstract class JsonPatchOperationSerializationTest
      * @throws IOException
      */
     protected JsonPatchOperationSerializationTest(final String directoryName,
-        final JsonPatchOperationFactory operationFactory,
+        final String operationName,
         final JsonPatchDeserializer deserializer)
         throws IOException
     {
-        final String resource = "/jsonpatch/" + directoryName + "/" + operationFactory.getOperationName() + ".json";
+        final String resource = "/jsonpatch/" + directoryName + "/" + operationName + ".json";
         node = JsonLoader.fromResource(resource);
         mapper = JacksonUtils.newMapper();
         Module module = new SimpleModule()
                 .addDeserializer(JsonPatch.class, deserializer);
         mapper.registerModule(module);
-        factory = (new RegistryBasedJsonPatchFactory.Builder())
-                .addOperation(operationFactory)
-                .build();
     }
 
     @DataProvider
@@ -90,8 +86,12 @@ public abstract class JsonPatchOperationSerializationTest
     public final void patchOperationSerializationWorks(final JsonNode input)
         throws IOException, JsonPatchException
     {
+        /*
+         * Deserialize a string input
+         */
         JsonNode patchWithOpNode = JacksonUtils.nodeFactory().arrayNode().add(input);
-        final JsonPatch patchWithOp = mapper.treeToValue(patchWithOpNode, JsonPatch.class);
+        String in = patchWithOpNode.toString();
+        final JsonPatch patchWithOp = mapper.readValue(in, JsonPatch.class);
 
         /*
          * Now, write the operation as a String...

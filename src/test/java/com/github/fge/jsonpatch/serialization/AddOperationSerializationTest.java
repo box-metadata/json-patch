@@ -29,6 +29,6 @@ public final class AddOperationSerializationTest
     public AddOperationSerializationTest()
         throws IOException
     {
-        super(new AddOperationFactory());
+        super((new AddOperationFactory()).getOperationName());
     }
 }

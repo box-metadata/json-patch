@@ -8,6 +8,6 @@ public final class OmitOperationSerializationTest extends ExtendedJsonPatchOpera
 {
     public OmitOperationSerializationTest() throws IOException
     {
-        super(new OmitOperationFactory());
+        super((new OmitOperationFactory()).getOperationName());
     }
 }

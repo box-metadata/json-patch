@@ -29,6 +29,6 @@ public final class CopyOperationSerializationTest
     public CopyOperationSerializationTest()
         throws IOException
     {
-        super(new CopyOperationFactory());
+        super((new CopyOperationFactory()).getOperationName());
     }
 }
