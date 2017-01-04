@@ -38,14 +38,14 @@ public abstract class TranslateOperationBase extends PathDualValueOperation
     {
         final JsonNode ret = node.deepCopy();
         final JsonNode toValueRet = toValue.deepCopy();
-        if (path.isEmpty()) {
+        if (getPath().isEmpty()) {
             if (EQUIVALENCE.equivalent(ret, fromValue)) {
                 return toValueRet;
             } else {
                 return ret;
             }
         }
-        final JsonNode valueAtPath = path.path(ret);
+        final JsonNode valueAtPath = getPath().path(ret);
         if (valueAtPath.isMissingNode()) {
             switch (pathMissingPolicy) {
                 case THROW:
@@ -57,8 +57,8 @@ public abstract class TranslateOperationBase extends PathDualValueOperation
         }
 
         if (EQUIVALENCE.equivalent(valueAtPath, fromValue)) {
-            final JsonNode parent = path.parent().get(ret);
-            final String rawToken = Iterables.getLast(path).getToken().getRaw();
+            final JsonNode parent = getPath().parent().get(ret);
+            final String rawToken = Iterables.getLast(getPath()).getToken().getRaw();
             if (parent.isObject())
                 ((ObjectNode) parent).set(rawToken, toValueRet);
             else

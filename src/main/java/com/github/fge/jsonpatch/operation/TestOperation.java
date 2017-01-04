@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonNumEquals;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.operation.PathValueOperation;
 import com.google.common.base.Equivalence;
 
 /**
@@ -60,7 +59,7 @@ public final class TestOperation
     public JsonNode apply(final JsonNode node)
         throws JsonPatchException
     {
-        final JsonNode tested = path.path(node);
+        final JsonNode tested = getPath().path(node);
         if (tested.isMissingNode())
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.noSuchPath"));

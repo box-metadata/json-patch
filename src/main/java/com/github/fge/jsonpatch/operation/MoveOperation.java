@@ -79,14 +79,14 @@ public final class MoveOperation
     public JsonNode apply(final JsonNode node)
         throws JsonPatchException
     {
-        if (from.equals(path))
+        if (from.equals(getPath()))
             return node.deepCopy();
         final JsonNode movedNode = from.path(node);
         if (movedNode.isMissingNode())
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.noSuchPath"));
         final JsonPatchOperation remove = new RemoveOperation(from);
-        final JsonPatchOperation add = new AddOperation(path, movedNode);
+        final JsonPatchOperation add = new AddOperation(getPath(), movedNode);
         return add.apply(remove.apply(node));
     }
 }

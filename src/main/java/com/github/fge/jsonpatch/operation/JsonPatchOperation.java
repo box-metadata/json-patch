@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializable;
+import com.github.fge.jackson.jsonpointer.JsonPointer;
 import com.github.fge.jsonpatch.JsonPatchException;
 
 /**
@@ -54,6 +55,10 @@ public interface JsonPatchOperation
      */
     public JsonNode apply(final JsonNode node)
         throws JsonPatchException;
+
+    public String getOp();
+
+    public JsonPointer getPath();
 
     @Override
     public String toString();

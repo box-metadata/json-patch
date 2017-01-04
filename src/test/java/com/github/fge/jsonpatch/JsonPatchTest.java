@@ -31,6 +31,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -119,5 +120,16 @@ public final class JsonPatchTest
         }
 
         verifyZeroInteractions(op2);
+    }
+
+    @Test
+    public void getOperationsReturnsTheCorrectOpsInTheCorrectOrder()
+    {
+        final JsonPatch patch = new JsonPatch(ImmutableList.of(op1, op2));
+
+        List<JsonPatchOperation> operations = patch.getOperations();
+        assertEquals(operations.size(), 2);
+        assertEquals(operations.get(0), op1);
+        assertEquals(operations.get(1), op2);
     }
 }

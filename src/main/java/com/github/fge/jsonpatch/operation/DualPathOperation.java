@@ -35,18 +35,13 @@ import java.io.IOException;
 /**
  * Base class for JSON Patch operations taking two JSON Pointers as arguments
  */
-public abstract class DualPathOperation
-    implements JsonPatchOperation
+public abstract class DualPathOperation extends JsonPatchOperationBase
 {
     protected static final MessageBundle BUNDLE
         = MessageBundles.getBundle(JsonPatchMessages.class);
 
-    protected final String op;
-
     @JsonSerialize(using = ToStringSerializer.class)
     protected final JsonPointer from;
-
-    protected final JsonPointer path;
 
     /**
      * Protected constructor
@@ -58,9 +53,8 @@ public abstract class DualPathOperation
     protected DualPathOperation(final String op, final JsonPointer from,
         final JsonPointer path)
     {
-        this.op = op;
+        super(op, path);
         this.from = from;
-        this.path = path;
     }
 
     @Override
@@ -69,8 +63,8 @@ public abstract class DualPathOperation
         throws IOException, JsonProcessingException
     {
         jgen.writeStartObject();
-        jgen.writeStringField("op", op);
-        jgen.writeStringField("path", path.toString());
+        jgen.writeStringField("op", getOp());
+        jgen.writeStringField("path", getPath().toString());
         jgen.writeStringField("from", from.toString());
         jgen.writeEndObject();
     }
@@ -86,6 +80,6 @@ public abstract class DualPathOperation
     @Override
     public final String toString()
     {
-        return "op: " + op + "; from: \"" + from + "\"; path: \"" + path + '"';
+        return "op: " + getOp() + "; from: \"" + from + "\"; path: \"" + getPath() + '"';
     }
 }

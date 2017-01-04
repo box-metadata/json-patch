@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
 import com.github.fge.jsonpatch.JsonPatchMessages;
-import com.github.fge.jsonpatch.operation.JsonPatchOperation;
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.load.MessageBundles;
 
@@ -36,15 +35,10 @@ import java.io.IOException;
 /**
  * Base class for patch operations taking a value in addition to a path
  */
-public abstract class PathValueOperation
-    implements JsonPatchOperation
+public abstract class PathValueOperation extends JsonPatchOperationBase
 {
     protected static final MessageBundle BUNDLE
         = MessageBundles.getBundle(JsonPatchMessages.class);
-
-    protected final String op;
-
-    protected final JsonPointer path;
 
     @JsonSerialize
     protected final JsonNode value;
@@ -56,11 +50,9 @@ public abstract class PathValueOperation
      * @param path affected path
      * @param value JSON value
      */
-    protected PathValueOperation(final String op, final JsonPointer path,
-        final JsonNode value)
+    protected PathValueOperation(final String op, final JsonPointer path, final JsonNode value)
     {
-        this.op = op;
-        this.path = path;
+        super(op, path);
         this.value = value.deepCopy();
     }
 
@@ -70,8 +62,8 @@ public abstract class PathValueOperation
         throws IOException, JsonProcessingException
     {
         jgen.writeStartObject();
-        jgen.writeStringField("op", op);
-        jgen.writeStringField("path", path.toString());
+        jgen.writeStringField("op", getOp());
+        jgen.writeStringField("path", getPath().toString());
         jgen.writeFieldName("value");
         jgen.writeTree(value);
         jgen.writeEndObject();
@@ -88,6 +80,6 @@ public abstract class PathValueOperation
     @Override
     public final String toString()
     {
-        return "op: " + op + "; path: \"" + path + "\"; value: " + value;
+        return "op: " + getOp() + "; path: \"" + getPath() + "\"; value: " + value;
     }
 }

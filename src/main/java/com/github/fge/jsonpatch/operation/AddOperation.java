@@ -84,14 +84,14 @@ public final class AddOperation
     public JsonNode apply(final JsonNode node)
         throws JsonPatchException
     {
-        if (path.isEmpty())
+        if (getPath().isEmpty())
             return value;
 
         /*
          * Check the parent node: it must exist and be a container (ie an array
          * or an object) for the add operation to work.
          */
-        final JsonNode parentNode = path.parent().path(node);
+        final JsonNode parentNode = getPath().parent().path(node);
         if (parentNode.isMissingNode())
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.noSuchParent"));
@@ -99,8 +99,8 @@ public final class AddOperation
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.parentNotContainer"));
         return parentNode.isArray()
-            ? addToArray(path, node)
-            : addToObject(path, node);
+            ? addToArray(getPath(), node)
+            : addToObject(getPath(), node);
     }
 
     private JsonNode addToArray(final JsonPointer path, final JsonNode node)
@@ -119,7 +119,7 @@ public final class AddOperation
         final int index;
         try {
             index = Integer.parseInt(token.toString());
-        } catch (NumberFormatException ignored) {
+        } catch (final NumberFormatException ignored) {
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.notAnIndex"));
         }

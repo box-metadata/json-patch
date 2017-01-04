@@ -177,4 +177,8 @@ public class JsonPatch
     {
         serialize(jgen, provider);
     }
+
+    public List<JsonPatchOperation> getOperations() {
+        return ImmutableList.copyOf(operations);
+    }
 }

@@ -61,6 +61,6 @@ public final class CopyOperation
         if (dupData.isMissingNode())
             throw new JsonPatchException(BUNDLE.getMessage(
                 "jsonPatch.noSuchPath"));
-        return new AddOperation(path, dupData).apply(node);
+        return new AddOperation(getPath(), dupData).apply(node);
     }
 }

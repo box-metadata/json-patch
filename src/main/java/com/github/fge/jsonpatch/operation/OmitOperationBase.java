@@ -36,14 +36,14 @@ public abstract class OmitOperationBase extends PathValueOperation
         throws JsonPatchException
     {
         final JsonNode ret = node.deepCopy();
-        if (path.isEmpty()) {
+        if (getPath().isEmpty()) {
             if (EQUIVALENCE.equivalent(ret, value)) {
                 return MissingNode.getInstance();
             } else {
                 return ret;
             }
         }
-        final JsonNode valueAtPath = path.path(ret);
+        final JsonNode valueAtPath = getPath().path(ret);
         if (valueAtPath.isMissingNode()) {
             switch (pathMissingPolicy) {
                 case THROW:
@@ -55,8 +55,8 @@ public abstract class OmitOperationBase extends PathValueOperation
         }
 
         if (EQUIVALENCE.equivalent(valueAtPath, value)) {
-            final JsonNode parent = path.parent().get(ret);
-            final String rawToken = Iterables.getLast(path).getToken().getRaw();
+            final JsonNode parent = getPath().parent().get(ret);
+            final String rawToken = Iterables.getLast(getPath()).getToken().getRaw();
             if (parent.isObject())
                 ((ObjectNode) parent).remove(rawToken);
             else
