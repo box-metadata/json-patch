@@ -17,47 +17,47 @@
  * - ASL 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
  */
 
-apply(plugin: "java");
-apply(plugin: "maven");
-apply(plugin: "signing");
-apply(plugin: "osgi");
-apply(plugin: "idea");
-apply(plugin: "eclipse");
+apply(plugin: "java")
+apply(plugin: "maven")
+apply(plugin: "signing")
+apply(plugin: "osgi")
+apply(plugin: "idea")
+apply(plugin: "eclipse")
 
-group = "io.dogote";
-version = "1.15-SNAPSHOT";
-sourceCompatibility = "1.6";
-targetCompatibility = "1.6"; // defaults to sourceCompatibility
+group = "com.box"
+version = "1.15-SNAPSHOT"
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6" // defaults to sourceCompatibility
 
 /*
  * List of dependencies
  */
 dependencies {
-    compile(group: "com.google.code.findbugs", name: "jsr305", version: "2.0.1");
-    compile(group: "com.github.fge", name: "jackson-coreutils", version: "1.6");
+    compile(group: "com.google.code.findbugs", name: "jsr305", version: "2.0.1")
+    compile(group: "com.github.fge", name: "jackson-coreutils", version: "1.6")
     testCompile(group: "org.testng", name: "testng", version: "6.8.7") {
-        exclude(group: "junit", module: "junit");
-        exclude(group: "org.beanshell", module: "bsh");
-        exclude(group: "org.yaml", module: "snakeyaml");
-    };
-    testCompile(group: "org.mockito", name: "mockito-core", version: "1.9.5");
-    testCompile(group: "org.assertj", name: "assertj-core", version: "1.7.0");
+        exclude(group: "junit", module: "junit")
+        exclude(group: "org.beanshell", module: "bsh")
+        exclude(group: "org.yaml", module: "snakeyaml")
+    }
+    testCompile(group: "org.mockito", name: "mockito-core", version: "1.9.5")
+    testCompile(group: "org.assertj", name: "assertj-core", version: "1.7.0")
 }
 
-javadoc.options.links("http://docs.oracle.com/javase/6/docs/api/");
-javadoc.options.links("http://jsr-305.googlecode.com/svn/trunk/javadoc/");
-javadoc.options.links("http://fasterxml.github.com/jackson-databind/javadoc/2.2.0/");
-javadoc.options.links("http://fasterxml.github.com/jackson-core/javadoc/2.2.0/");
-javadoc.options.links("http://fasterxml.github.com/jackson-annotations/javadoc/2.2.0/");
-javadoc.options.links("http://docs.guava-libraries.googlecode.com/git-history/v16.0.1/javadoc/");
-javadoc.options.links("http://fge.github.io/msg-simple/");
-javadoc.options.links("http://fge.github.io/jackson-coreutils/");
+javadoc.options.links("http://docs.oracle.com/javase/6/docs/api/")
+javadoc.options.links("http://jsr-305.googlecode.com/svn/trunk/javadoc/")
+javadoc.options.links("http://fasterxml.github.com/jackson-databind/javadoc/2.2.0/")
+javadoc.options.links("http://fasterxml.github.com/jackson-core/javadoc/2.2.0/")
+javadoc.options.links("http://fasterxml.github.com/jackson-annotations/javadoc/2.2.0/")
+javadoc.options.links("http://docs.guava-libraries.googlecode.com/git-history/v16.0.1/javadoc/")
+javadoc.options.links("http://fge.github.io/msg-simple/")
+javadoc.options.links("http://fge.github.io/jackson-coreutils/")
 
 /*
  * Repositories to use
  */
 repositories {
-    mavenCentral();
+    mavenCentral()
 }
 
 /*
@@ -66,16 +66,16 @@ repositories {
  */
 test {
     useTestNG() {
-        useDefaultListeners = true;
-    };
+        useDefaultListeners = true
+    }
 }
 
 /*
  * Necessary to generate the source and javadoc jars
  */
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources";
-    from sourceSets.main.allSource;
+    classifier = "sources"
+    from sourceSets.main.allSource
 }
 
 /*
@@ -88,23 +88,23 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 //}
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc";
-    from javadoc.destinationDir;
+    classifier = "javadoc"
+    from javadoc.destinationDir
 }
 
 artifacts {
-    archives jar;
-    archives sourcesJar;
-    archives javadocJar;
+    archives jar
+    archives sourcesJar
+    archives javadocJar
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "2.5";
-    distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip";
+    gradleVersion = "2.5"
+    distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
 task pom << {
-    pom {}.writeTo("${projectDir}/pom.xml");
+    pom {}.writeTo("${projectDir}/pom.xml")
 }
 
 /*
@@ -112,47 +112,47 @@ task pom << {
  */
 
 project.ext {
-    description = "JSON Patch (RFC 6902) and JSON Merge Patch (RFC 7386) implementation in Java";
-    scmURL = sprintf("git@github.com:dogote/%s.git", name);
-    projectURL = sprintf("https://github.com/dogote/%s", name);
-    sonatypeStaging = "https://oss.sonatype.org/service/local/staging/deploy/maven2/";
-    sonatypeSnapshots = "https://oss.sonatype.org/content/repositories/snapshots/";
-};
+    description = "JSON Patch (RFC 6902) and JSON Merge Patch (RFC 7386) implementation in Java"
+    scmURL = sprintf("git@github.com:box-metadata/%s.git", name)
+    projectURL = sprintf("https://github.com/box-metadata/%s", name)
+    sonatypeStaging = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    sonatypeSnapshots = "https://oss.sonatype.org/content/repositories/snapshots/"
+}
 
 task checkSigningRequirements << {
-    def requiredProperties = [ "sonatypeUsername", "sonatypePassword" ];
-    def noDice = false;
+    def requiredProperties = [ "sonatypeUsername", "sonatypePassword" ]
+    def noDice = false
     requiredProperties.each {
         if (project.properties[it] == null) {
-            noDice = true;
+            noDice = true
             System.err.printf("property \"%s\" is not defined!")
         }
     }
     if (noDice)
         throw new IllegalStateException("missing required properties for " +
-            "upload");
+            "upload")
 }
 
 uploadArchives {
-    dependsOn(checkSigningRequirements);
+    dependsOn(checkSigningRequirements)
     repositories {
         mavenDeployer {
             beforeDeployment {
-                MavenDeployment deployment -> signing.signPom(deployment);
+                MavenDeployment deployment -> signing.signPom(deployment)
             }
 
             repository(url: "${sonatypeStaging}") {
                 authentication(
                     userName: project.properties["sonatypeUsername"],
                     password: project.properties["sonatypePassword"]
-                );
+                )
             }
 
             snapshotRepository(url: "${sonatypeSnapshots}") {
                 authentication(
                     userName: project.properties["sonatypeUsername"],
                     password: project.properties["sonatypePassword"]
-                );
+                )
             }
         }
     }
@@ -166,43 +166,43 @@ uploadArchives {
     uploadArchives.repositories.mavenDeployer
 ]*.pom*.whenConfigured { pom ->
     pom.project {
-        name "${project.name}";
-        packaging "jar";
-        description "${project.ext.description}";
-        url "${projectURL}";
+        name "${project.name}"
+        packaging "jar"
+        description "${project.ext.description}"
+        url "${projectURL}"
 
         scm {
-            url "${scmURL}";
-            connection "scm:git:${scmURL}";
-            developerConnection "scm:git${scmURL}";
+            url "${scmURL}"
+            connection "scm:git:${scmURL}"
+            developerConnection "scm:git${scmURL}"
         }
 
         licenses {
             license {
-                name "Lesser General Public License, version 3 or greater";
-                url "http://www.gnu.org/licenses/lgpl.html";
-                distribution "repo";
-            };
+                name "Lesser General Public License, version 3 or greater"
+                url "http://www.gnu.org/licenses/lgpl.html"
+                distribution "repo"
+            }
             license {
-                name "Apache Software License, version 2.0";
-                url "http://www.apache.org/licenses/LICENSE-2.0";
-                distribution "repo";
+                name "Apache Software License, version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0"
+                distribution "repo"
             }
         }
 
         developers {
             developer {
-                id "jasonchaffee";
-                name "Jason Chafffee";
-                email "jasonchaffee+dogote@gmail.com";
+                id "metadata-dev"
+                name "Metadata Dev"
+                email "metadata-dev@box.com"
             }
         }
     }
 }
 
-ext.forRelease = !version.endsWith("-SNAPSHOT");
+ext.forRelease = !version.endsWith("-SNAPSHOT")
 signing {
-    required { forRelease && gradle.taskGraph.hasTask("uploadArchives") };
-    sign configurations.archives;
+    required { forRelease && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
 }
 
