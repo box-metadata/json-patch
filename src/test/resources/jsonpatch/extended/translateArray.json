@@ -1,0 +1,51 @@
+{
+  "errors": [
+    {
+      "op": { "op": "translateArray", "path": "/x", "from": "baz", "value": "foo" },
+      "node": {"x": {"a" : "b"}},
+      "message": "jsonPatch.notAnArray"
+    },
+    {
+      "op": { "op": "translateArray", "path": "/x", "from": {"a" : "b"} , "value": {"a" : "c"} },
+      "node": {"x": {"a" : "b"}},
+      "message": "jsonPatch.notAnArray"
+    },
+    {
+      "op": { "op": "translateArray", "path": "/0/2", "from": "e", "value": "c" },
+      "node": [ [ "a", "b", "c"], "d", "e" ],
+      "message": "jsonPatch.notAnArray"
+    }
+  ],
+  "ops": [
+    {
+      "op": { "op": "translateArray", "path": "/x", "from": "a", "value": "z" },
+      "node": { "x": ["a", "a", "y"] },
+      "expected": { "x": ["z", "z", "y"] }
+    },
+    {
+      "op": { "op": "translateArray", "path": "/x", "from": "a", "value": null },
+      "node": { "x": ["a", "b", "y"] },
+      "expected": { "x": [null, "b", "y"] }
+    },
+    {
+      "op": { "op": "translateArray", "path": "/x", "from": "a", "value": "z" },
+      "node": { "x": ["a", "z", "y"] },
+      "expected": { "x": ["z", "z", "y"] }
+    },
+    {
+      "op": { "op": "translateArray", "path": "/x/y", "from": "b", "value": "c" },
+      "node": { "x": {"y":["b", "b", "b"] }},
+      "expected": { "x": {"y":["c", "c", "c"] }}
+    },
+    {
+      "op": { "op": "translateArray", "path": "/x/y", "from": "b", "value": "c" },
+      "node": { "x": {"y":[] }},
+      "expected": { "x": {"y":[] }}
+    },
+    {
+      "op": { "op": "translateArray", "path": "/x/y", "from": {}, "value": {"newKey":"newValue"}},
+      "node": { "x": { "a": "b", "y": [{}, {"key":"value"},  {}] } },
+      "expected": { "x": { "a": "b" , "y": [{"newKey":"newValue"}, {"key":"value"}, {"newKey":"newValue"}]} }
+    }
+  ]
+}
