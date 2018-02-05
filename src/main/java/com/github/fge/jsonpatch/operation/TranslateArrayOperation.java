@@ -10,7 +10,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.google.common.base.Equivalence;
 
 /**
- * Extended JSON Patch {@code translateArray} operation.
+ * Extended JSON Patch {@code translateArray?} operation.
  * The operation will translate all items equivalent to {@code fromValue} to a {@code toValue} in the array at
  * {@code path} if they exist.
  * The operation will do nothing if no items in the array at {@code path} are equivalent to {@code fromValue}.
@@ -19,7 +19,7 @@ import com.google.common.base.Equivalence;
 public final class TranslateArrayOperation
 		extends PathDualValueOperation
 {
-	public static final String OPERATION_NAME = "translateArray";
+	public static final String OPERATION_NAME = "translateArray?";
 
 	private static final Equivalence<JsonNode> EQUIVALENCE = JsonNumEquals.getInstance();
 

@@ -1,59 +1,59 @@
 {
   "errors": [
     {
-      "op": { "op": "omitArray", "path": "/x", "value": "y" },
+      "op": { "op": "omitArray?", "path": "/x", "value": "y" },
       "node": {"x": {"y" : "z"}},
       "message": "jsonPatch.notAnArray"
     },
     {
-      "op": { "op": "omitArray", "path": "/0/2", "value": "c" },
+      "op": { "op": "omitArray?", "path": "/0/2", "value": "c" },
       "node": [ [ "a", "b", "c"], "d", "e" ],
       "message": "jsonPatch.notAnArray"
     }
   ],
   "ops": [
     {
-      "op": { "op": "omitArray", "path": "/0", "value": "c" },
+      "op": { "op": "omitArray?", "path": "/0", "value": "c" },
       "node": [ [ "a", "b", "c"], "d", "e" ],
       "expected": [ [ "a", "b" ], "d", "e" ]
     },
     {
-      "op": { "op": "omitArray", "path": "/x", "value": "y" },
+      "op": { "op": "omitArray?", "path": "/x", "value": "y" },
       "node": { "x": [ "y", "y", "z" ], "foo": "bar" },
       "expected": { "x": [ "z" ], "foo": "bar" }
     },
     {
-      "op": { "op": "omitArray", "path": "/0", "value": "notSameValue" },
+      "op": { "op": "omitArray?", "path": "/0", "value": "notSameValue" },
       "node": [ [ "a", "b", "c"], "d", "e" ],
       "expected": [ [ "a", "b", "c" ], "d", "e" ]
     },
     {
-      "op": { "op": "omitArray", "path": "/x/y", "value": {} },
+      "op": { "op": "omitArray?", "path": "/x/y", "value": {} },
       "node": { "x": { "a": "b", "y": [{}, {"key":"value"},  {}] } },
       "expected": { "x": { "a": "b" , "y": [{"key":"value"}]} }
     },
     {
-      "op": { "op": "omitArray", "path": "/x/b", "value": [] },
+      "op": { "op": "omitArray?", "path": "/x/b", "value": [] },
       "node": { "x": { "a": "value", "b": [[], {"key":"value"},  []] } },
       "expected": { "x": { "a": "value" , "b": [{"key":"value"}]} }
     },
     {
-      "op": { "op": "omitArray", "path": "/x/y", "value": "test" },
+      "op": { "op": "omitArray?", "path": "/x/y", "value": "test" },
       "node": { "x": { "y": ["test", "test", "test"] } },
       "expected": { "x": {} }
     },
     {
-      "op": { "op": "omitArray", "path": "/x/y", "value": "test" },
+      "op": { "op": "omitArray?", "path": "/x/y", "value": "test" },
       "node": { "x": { "y": [] } },
       "expected": { "x": { "y": [] } }
     },
     {
-      "op": { "op": "omitArray", "path": "/x", "value": "test" },
+      "op": { "op": "omitArray?", "path": "/x", "value": "test" },
       "node": { "x": ["test", "test", "test"] },
       "expected": {}
     },
     {
-      "op": { "op": "omitArray", "path": "/0/3", "value": "c" },
+      "op": { "op": "omitArray?", "path": "/0/3", "value": "c" },
       "node": [ [ "a", "b", "c"], "d", "e" ],
       "expected": [ [ "a", "b", "c"], "d", "e" ]
     }

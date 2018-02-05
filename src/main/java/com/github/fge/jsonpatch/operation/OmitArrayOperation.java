@@ -12,7 +12,7 @@ import com.google.common.base.Equivalence;
 import com.google.common.collect.Iterables;
 
 /**
- * Extended JSON Patch {@code omitArray} operation.
+ * Extended JSON Patch {@code omitArray?} operation.
  *
  * The operation will remove all the items equivalent to {@code value} from the array at {@code path}.
  * The operation will remove the parent node if applying the operation to the array results in an empty array.
@@ -22,7 +22,7 @@ import com.google.common.collect.Iterables;
 public final class OmitArrayOperation
         extends PathValueOperation
 {
-    public static final String OPERATION_NAME = "omitArray";
+    public static final String OPERATION_NAME = "omitArray?";
     private static final Equivalence<JsonNode> EQUIVALENCE = JsonNumEquals.getInstance();
 
     @JsonCreator
