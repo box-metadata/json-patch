@@ -1,3 +1,7 @@
+## 1.16
+
+* Introduce "omitArray?" and "translateArray?" operation
+
 ## 1.15
 
 * Introduce "move?" operation
