@@ -22,7 +22,7 @@ Its features are:
 
 ## Versions
 
-The current version is **1.15**. See file `RELEASE-NOTES.md` for details.
+The current version is **1.16**. See file `RELEASE-NOTES.md` for details.
 
 ## Using it in your project
 
