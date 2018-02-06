@@ -1,13 +1,14 @@
+
 package com.github.fge.jsonpatch.operation;
 
 import java.io.IOException;
 
-public class OmitArrayOperationTest
+public class TranslateArrayOptionalOperationTest
         extends ExtendedJsonPatchOperationTest
 {
-    public OmitArrayOperationTest()
+    public TranslateArrayOptionalOperationTest()
         throws IOException
     {
-        super(OmitArrayOperation.OPERATION_NAME);
+        super(TranslateArrayOptionalOperation.OPERATION_NAME);
     }
 }
