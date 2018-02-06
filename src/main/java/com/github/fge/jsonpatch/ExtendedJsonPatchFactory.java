@@ -1,16 +1,9 @@
 package com.github.fge.jsonpatch;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jsonpatch.operation.*;
-import com.github.fge.msgsimple.bundle.MessageBundle;
-import com.github.fge.msgsimple.load.MessageBundles;
-
-import java.io.IOException;
 
 /**
  * ExtendedJsonPatchFactory can create a JsonPatchFactory configured to work with the extended set of JSON Patch operations.
@@ -31,10 +24,10 @@ public class ExtendedJsonPatchFactory
                 new NamedType(TestOperation.class, TestOperation.OPERATION_NAME),
                 new NamedType(OmitOperation.class, OmitOperation.OPERATION_NAME),
                 new NamedType(OmitOptionalOperation.class, OmitOptionalOperation.OPERATION_NAME),
-                new NamedType(OmitArrayOperation.class, OmitArrayOperation.OPERATION_NAME),
+                new NamedType(OmitArrayOptionalOperation.class, OmitArrayOptionalOperation.OPERATION_NAME),
                 new NamedType(TranslateOperation.class, TranslateOperation.OPERATION_NAME),
                 new NamedType(TranslateOptionalOperation.class, TranslateOptionalOperation.OPERATION_NAME),
-                new NamedType(TranslateArrayOperation.class, TranslateArrayOperation.OPERATION_NAME)
+                new NamedType(TranslateArrayOptionalOperation.class, TranslateArrayOptionalOperation.OPERATION_NAME)
         );
         return new JsonPatchFactory(mapper);
     }

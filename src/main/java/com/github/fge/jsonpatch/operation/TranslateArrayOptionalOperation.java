@@ -16,7 +16,7 @@ import com.google.common.base.Equivalence;
  * The operation will do nothing if no items in the array at {@code path} are equivalent to {@code fromValue}.
  * The operation will throw an exception if the node at {@code path} is not an array.
  */
-public final class TranslateArrayOperation
+public final class TranslateArrayOptionalOperation
 		extends PathDualValueOperation
 {
 	public static final String OPERATION_NAME = "translateArray?";
@@ -24,9 +24,9 @@ public final class TranslateArrayOperation
 	private static final Equivalence<JsonNode> EQUIVALENCE = JsonNumEquals.getInstance();
 
 	@JsonCreator
-	public TranslateArrayOperation(@JsonProperty("path") final JsonPointer path,
-							  @JsonProperty("from") final JsonNode fromValue,
-							  @JsonProperty("value") final JsonNode toValue)
+	public TranslateArrayOptionalOperation(@JsonProperty("path") final JsonPointer path,
+										   @JsonProperty("from") final JsonNode fromValue,
+										   @JsonProperty("value") final JsonNode toValue)
 	{
 		super(OPERATION_NAME, path, fromValue, toValue);
 	}

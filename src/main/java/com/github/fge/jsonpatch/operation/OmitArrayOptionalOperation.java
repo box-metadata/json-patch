@@ -19,15 +19,15 @@ import com.google.common.collect.Iterables;
  * The operation will throw an exception if the node at {@code path} is not an array.
  * The operation will do nothing if no items in the array at {@code path} are equivalent to {@code value}.
  */
-public final class OmitArrayOperation
+public final class OmitArrayOptionalOperation
         extends PathValueOperation
 {
     public static final String OPERATION_NAME = "omitArray?";
     private static final Equivalence<JsonNode> EQUIVALENCE = JsonNumEquals.getInstance();
 
     @JsonCreator
-    public OmitArrayOperation(@JsonProperty("path") final JsonPointer path,
-                              @JsonProperty("value") final JsonNode value)
+    public OmitArrayOptionalOperation(@JsonProperty("path") final JsonPointer path,
+									  @JsonProperty("value") final JsonNode value)
     {
         super(OPERATION_NAME, path, value);
     }
